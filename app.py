@@ -153,7 +153,7 @@ def add_row(ws, row: list):
 
 # ── App layout ────────────────────────────────────────────────────────────────
 st.markdown('<p class="big-title">💸 Money Tracker</p>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Student edition — know where every peso goes</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">Student edition — know where every rupiah goes</p>', unsafe_allow_html=True)
 
 # Sidebar — add transaction
 with st.sidebar:
@@ -167,7 +167,7 @@ with st.sidebar:
         category = st.selectbox("Category", ["💰 Allowance from Parents", "💼 Part-time / Freelance", "🎁 Gift", "📦 Other"])
 
     description = st.text_input("Description", placeholder="e.g. Lunch at canteen")
-    amount = st.number_input("Amount (₱)", min_value=0.01, step=1.0, format="%.2f")
+    amount = st.number_input("Amount (Rp)", min_value=1.0, step=1000.0, format="%.0f")
     txn_date = st.date_input("Date", value=date.today())
 
     if st.button("Save Transaction"):
@@ -202,20 +202,20 @@ with col1:
     st.markdown(f"""
     <div class="metric-card">
         <div class="metric-label">Total Income</div>
-        <div class="metric-value metric-green">₱{total_income:,.2f}</div>
+        <div class="metric-value metric-green">Rp{total_income:,.0f}</div>
     </div>""", unsafe_allow_html=True)
 with col2:
     st.markdown(f"""
     <div class="metric-card">
         <div class="metric-label">Total Expenses</div>
-        <div class="metric-value metric-red">₱{total_expense:,.2f}</div>
+        <div class="metric-value metric-red">Rp{total_expense:,.0f}</div>
     </div>""", unsafe_allow_html=True)
 with col3:
     color_class = "metric-green" if balance >= 0 else "metric-red"
     st.markdown(f"""
     <div class="metric-card">
         <div class="metric-label">Balance</div>
-        <div class="metric-value {color_class}">₱{balance:,.2f}</div>
+        <div class="metric-value {color_class}">Rp{balance:,.0f}</div>
     </div>""", unsafe_allow_html=True)
 
 st.markdown("---")
@@ -254,7 +254,7 @@ if not expenses_df.empty:
             )
             fig_bar.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-                font_color="#f0ede8", xaxis_title="", yaxis_title="₱",
+                font_color="#f0ede8", xaxis_title="", yaxis_title="Rp",
                 margin=dict(t=10, b=10, l=10, r=10),
             )
             fig_bar.update_xaxes(gridcolor="#2a2a35")
@@ -274,10 +274,9 @@ filtered = filtered.sort_values("Date", ascending=False)
 # Display nicely
 display_df = filtered.copy()
 display_df["Date"] = display_df["Date"].dt.strftime("%b %d, %Y")
-display_df["Amount"] = display_df["Amount"].apply(lambda x: f"₱{x:,.2f}")
+display_df["Amount"] = display_df["Amount"].apply(lambda x: f"Rp{x:,.0f}")
 st.dataframe(
     display_df[["Date", "Type", "Category", "Description", "Amount"]],
     use_container_width=True,
     hide_index=True,
 )
-
